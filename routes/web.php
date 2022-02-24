@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Student\StudentDashboardController;
 use App\Http\Controllers\Teacher\TeacherDashboardController;
 use App\Http\Middleware\Admin\OnlyAdmin;
+use App\Http\Middleware\Student\OnlyStudent;
 use App\Http\Middleware\Teacher\OnlyTeacher;
 use Illuminate\Support\Facades\Route;
 
@@ -22,15 +24,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', [AdminDashboardController::class,'index'])->middleware(['auth'])->name('dashboard');
-// Route::prefix('/admin')->middleware(['auth',OnlyAdmin::class])->group(function(){
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
+Route::prefix('/admin')->middleware(['auth',OnlyAdmin::class])->group(function(){
 
-//     Route::get('/dashboard',[AdminDashboardController::class,'index']);
-// });
-// Route::prefix('/teacher')->middleware(['auth',OnlyTeacher::class])->group(function(){
+    Route::get('/dashboard',[AdminDashboardController::class,'index']);
+});
+Route::prefix('/teacher')->middleware(['auth',OnlyTeacher::class])->group(function(){
 
-//     Route::get('/dashboard',[TeacherDashboardController::class,'index']);
-// });
+    Route::get('/dashboard',[TeacherDashboardController::class,'index']);
+});
+Route::prefix('/student')->middleware(['auth',OnlyStudent::class])->group(function(){
+
+    Route::get('/dashboard',[StudentDashboardController::class,'index']);
+});
 
 Route::get('/mail',[UserController::class,'mailSending']);
 

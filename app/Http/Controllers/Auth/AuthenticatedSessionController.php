@@ -32,13 +32,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // $var = '/student/dashboard';
-        // if (Auth::user()->user_type == 0) {
-        //     $var = '/admin/dashboard';
-        // } else if (Auth::user()->user_type == 1) {
-        //     $var = '/teacher/dashboard';
-        // }
-        $var = '/dashboard';
+        $var = '/student/dashboard';
+        if (Auth::user()->user_type == 0) {
+            $var = '/admin/dashboard';
+        } else if (Auth::user()->user_type == 1) {
+            $var = '/teacher/dashboard';
+        }
+
         return redirect()->intended($var);
     }
 

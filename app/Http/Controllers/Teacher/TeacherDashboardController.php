@@ -15,6 +15,6 @@ class TeacherDashboardController extends Controller
     public function index()
     {
         //
-        return view('teacherDashboard');
+        return view('teacher.dashboard.index');
     }
 }
