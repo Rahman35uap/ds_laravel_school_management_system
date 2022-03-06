@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Mail;
 
@@ -16,6 +17,8 @@ class UserController extends Controller
     public function index()
     {
         //
+        $data['users_data'] = User::get();
+        return view('admin.userCRUD.index',$data);
     }
 
     /**
@@ -26,6 +29,7 @@ class UserController extends Controller
     public function create()
     {
         //
+        echo "create";
     }
 
     /**

@@ -3,7 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Title</h3>
+        <h3 class="card-title">Admin DashBoard</h3>
 
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -15,7 +15,24 @@
         </div>
     </div>
     <div class="card-body">
-        Start creating your amazing application!
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Menu</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="{{ url("/admin/users") }}">User</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#">Routine</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#">Exam</a></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <!-- /.card-body -->
     <div class="card-footer">

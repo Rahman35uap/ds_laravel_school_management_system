@@ -30,6 +30,7 @@ Route::get('/', function () {
 Route::prefix('/admin')->middleware(['auth',OnlyAdmin::class])->group(function(){
 
     Route::get('/dashboard',[AdminDashboardController::class,'index']);
+    Route::resource('users', UserController::class);
 });
 Route::prefix('/teacher')->middleware(['auth',OnlyTeacher::class])->group(function(){
 
