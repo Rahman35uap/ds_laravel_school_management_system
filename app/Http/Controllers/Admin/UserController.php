@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User_Create\userTypeValidation;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Enum;
 use Mail;
 
 class UserController extends Controller
@@ -26,10 +29,11 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(userTypeValidation $userTypeValidation)
     {
         //
-        echo "create";
+        $data['user_type'] = $userTypeValidation->user_type;
+        return view('admin.userCRUD.create',$data);
     }
 
     /**
@@ -91,11 +95,15 @@ class UserController extends Controller
     public function mailSending()
     {
         $data["name"] = "sms_admin";
-        $data["data"] = "sms_admin_tesing";
+        $data["data"] = "sms_admin_testing";
         $user['to'] = "ds.sms.controller@gmail.com";
         Mail::send('mail', $data, function ($message) use ($user) {
             $message->to($user['to']);
             $message->subject('Testing');
         });
+    }
+    public function hash()
+    {
+        echo Hash::make("123");
     }
 }

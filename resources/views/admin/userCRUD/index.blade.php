@@ -6,7 +6,14 @@
         <h3 class="card-title">List of all users in the school</h3>
     </div>
     <div class="card-body">
-        <a href="{{ url('/admin/users/create') }}" class="btn btn-success">Add New User</a>
+        <form action="{{ url("/admin/users/create") }}" method="GET">
+            @csrf
+            <select name="user_type">
+                <option value="1"> Student</option>
+                <option value="2"> Teacher</option>
+            </select>
+            <button type="submit" class="btn btn-success">Add New User</button>
+        </form>
         <hr>
         <table class="table table-bordered">
             <thead>
@@ -19,23 +26,35 @@
             </thead>
             <tbody>
                 @foreach ($users_data as $user)
-                    <tr>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>{{ App\Enums\UserType::getDescription($user->user_type) }}</td>
-                        <td>
-                            <a href="{{ url("/admin/users/{$user->id}/edit") }}" class="btn btn-warning btn-sm">Update</a>
-                            <form action="{{ url("/admin/users/$user->id") }}" method="POST" onsubmit="return confirm('Do you want to delete this task?');">
-                                @csrf
-                                @method('delete')
-                                <input type="submit" value="Delete" class="btn btn-danger btn-sm">
-                            </form>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ App\Enums\UserType::getDescription($user->user_type) }}</td>
+                    <td>
+                        <a href="{{ url("/admin/users/{$user->id}/edit") }}" class="btn btn-warning btn-sm">Update</a>
+                        <form action="{{ url("/admin/users/$user->id") }}" method="POST"
+                            onsubmit="return confirm('Do you want to delete this task?');">
+                            @csrf
+                            @method('delete')
+                            <input type="submit" value="Delete" class="btn btn-danger btn-sm">
+                        </form>
+                    </td>
+                </tr>
                 @endforeach
-                
+
             </tbody>
         </table>
     </div>
 </div>
+
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
 @endsection

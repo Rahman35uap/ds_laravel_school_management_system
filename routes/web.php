@@ -42,5 +42,6 @@ Route::prefix('/student')->middleware(['auth',OnlyStudent::class])->group(functi
 });
 
 Route::get('/mail',[UserController::class,'mailSending']);
+Route::get('/hash',[UserController::class,'hash']);
 
 require __DIR__.'/auth.php';
