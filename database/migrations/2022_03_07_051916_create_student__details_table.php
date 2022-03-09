@@ -21,6 +21,8 @@ class CreateStudentDetailsTable extends Migration
             $table->string("father_name");
             $table->string("mother_name");
             $table->string("parent_contact_no");
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

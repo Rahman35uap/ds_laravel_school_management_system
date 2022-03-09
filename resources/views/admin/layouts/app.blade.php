@@ -101,6 +101,15 @@
 
                 <!-- Default box -->
                 @yield('content')
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
                 <!-- /.card -->
 
             </section>
@@ -124,6 +133,7 @@
     </div>
     <!-- ./wrapper -->
 
+
     <!-- jQuery -->
     <script src="{{ asset("/admin/plugins/jquery/jquery.min.js") }}""></script>
 <!-- Bootstrap 4 -->
@@ -131,6 +141,9 @@
     <!-- AdminLTE App -->
     <script src="{{ asset("/admin/dist/js/adminlte.min.js") }}"" ></script>
 <script src=" {{ asset("/admin/dist/js/demo.js") }}""></script>
+
+    @stack('scripts')
+
 </body>
 
 </html>

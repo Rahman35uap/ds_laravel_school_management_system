@@ -36,7 +36,15 @@ class AuthenticatedSessionController extends Controller
         if (Auth::user()->user_type == 0) {
             $var = '/admin/dashboard';
         } else if (Auth::user()->user_type == 1) {
-            $var = '/teacher/dashboard';
+            if(Auth::user()->is_first_time_login == true)
+            {
+                $var = '/teacher/firstTimeLogin';
+            }
+            else
+            {
+                $var = '/teacher/dashboard';
+            }
+            
         }
 
         return redirect()->intended($var);

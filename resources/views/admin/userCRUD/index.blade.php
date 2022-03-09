@@ -9,8 +9,8 @@
         <form action="{{ url("/admin/users/create") }}" method="GET">
             @csrf
             <select name="user_type">
-                <option value="1"> Student</option>
-                <option value="2"> Teacher</option>
+                <option value="2"> Student</option>
+                <option value="1"> Teacher</option>
             </select>
             <button type="submit" class="btn btn-success">Add New User</button>
         </form>
@@ -47,14 +47,6 @@
     </div>
 </div>
 
-@if ($errors->any())
-<div class="alert alert-danger">
-    <ul>
-        @foreach ($errors->all() as $error)
-        <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-</div>
-@endif
+
 
 @endsection

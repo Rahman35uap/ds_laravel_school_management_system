@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User_Create\userCreateValidation;
 use App\Http\Requests\User_Create\userTypeValidation;
+use App\Models\Teacher_Detail;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Enum;
 use Mail;
@@ -42,9 +46,30 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(userCreateValidation $userCreateValidation)
     {
         //
+        $subjects = json_encode($userCreateValidation->subjects);
+        $current_user_id = DB::table('users')->insertGetId(
+            ['name'=>$userCreateValidation->teacher_name,
+            'user_type'=>$userCreateValidation->user_type,
+            'is_first_time_login'=>true,
+            'email' => $userCreateValidation->email, 
+            'password' => Hash::make("123"),
+            'created_by' => Auth::user()->id,
+            'updated_by' => Auth::user()->id
+            ]
+        );
+        $teacher_detail = new Teacher_Detail();
+        $teacher_detail->user_id = $current_user_id;
+        $teacher_detail->subjects_expertize_at = $subjects;
+        $teacher_detail->contact_no = $userCreateValidation->teacher_contact;
+        $teacher_detail->created_by = Auth::user()->id;
+        $teacher_detail->updated_by = Auth::user()->id;
+        $teacher_detail->save();
+        $this->sendMailtoUser($userCreateValidation->email);
+        flash('Successfully created')->success();
+        return redirect('/admin/users');
     }
 
     /**
@@ -105,5 +130,15 @@ class UserController extends Controller
     public function hash()
     {
         echo Hash::make("123");
+    }
+    public function sendMailtoUser($toAddress)
+    {
+        $data["email"] = $toAddress;
+        $data["password"] = "123";
+        $user['to'] = $toAddress;
+        Mail::send('admin.userCRUD.sendMailToUser', $data, function ($message) use ($user) {
+            $message->to($user['to']);
+            $message->subject('Your login credentials for School_Management_system');
+        });
     }
 }

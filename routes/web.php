@@ -35,6 +35,8 @@ Route::prefix('/admin')->middleware(['auth',OnlyAdmin::class])->group(function()
 Route::prefix('/teacher')->middleware(['auth',OnlyTeacher::class])->group(function(){
 
     Route::get('/dashboard',[TeacherDashboardController::class,'index']);
+    Route::get('/firstTimeLogin',[TeacherDashboardController::class,'firstTimeLogin']);
+    Route::post('/firstTimeLogin/passwordUpdate',[TeacherDashboardController::class,'passwordUpdate']);
 });
 Route::prefix('/student')->middleware(['auth',OnlyStudent::class])->group(function(){
 

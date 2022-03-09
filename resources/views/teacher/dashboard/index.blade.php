@@ -16,6 +16,7 @@
     </div>
     <div class="card-body">
         Start creating your amazing application!
+        {{  Auth::user()->is_first_time_login }}
     </div>
     <!-- /.card-body -->
     <div class="card-footer">
