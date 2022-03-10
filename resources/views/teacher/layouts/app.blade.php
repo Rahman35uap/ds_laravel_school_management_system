@@ -26,10 +26,16 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Home</a>
+                    @auth
+                        @if (Auth::user()->user_type == 1)
+                            <a href="{{ url('/teacher/dashboard') }}" class="nav-link">Dashboard</a>
+                        @else
+                            <a href="{{ url('/') }}" class="nav-link">Home</a>
+                        @endif
+                    @endauth
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Contact</a>
+                    <a href="{{ url('/') }}" class="nav-link">Home</a>
                 </li>
             </ul>
 

@@ -31,13 +31,16 @@
                     <td>{{ $user->email }}</td>
                     <td>{{ App\Enums\UserType::getDescription($user->user_type) }}</td>
                     <td>
-                        <a href="{{ url("/admin/users/{$user->id}/edit") }}" class="btn btn-warning btn-sm">Update</a>
-                        <form action="{{ url("/admin/users/$user->id") }}" method="POST"
-                            onsubmit="return confirm('Do you want to delete this task?');">
-                            @csrf
-                            @method('delete')
-                            <input type="submit" value="Delete" class="btn btn-danger btn-sm">
-                        </form>
+                        <a href="{{ url("/admin/users/{$user->id}") }}" class="btn btn-success btn-sm">Show</a>
+                        @if ($user->user_type != 0)
+                            <a href="{{ url("/admin/users/{$user->id}/edit") }}" class="btn btn-warning btn-sm">Update</a>
+                            <form action="{{ url("/admin/users/$user->id") }}" method="POST"
+                                onsubmit="return confirm('Do you want to delete this task?');">
+                                @csrf
+                                @method('delete')
+                                <input type="submit" value="Delete" class="btn btn-danger btn-sm">
+                            </form>
+                        @endif
                     </td>
                 </tr>
                 @endforeach

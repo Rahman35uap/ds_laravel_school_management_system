@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User_Create\userCreateValidation;
 use App\Http\Requests\User_Create\userTypeValidation;
+use App\Http\Requests\User_Create\userUpdateValidation;
 use App\Models\Teacher_Detail;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -81,6 +83,35 @@ class UserController extends Controller
     public function show($id)
     {
         //
+        $user = User::find($id);
+        if($user)
+        {
+            if($user->user_type == 1)
+            {
+                //Teacher
+                $data['user'] = $user;
+                $user_details = Teacher_Detail::where('user_id',$id)->first();
+                // dd($user_details);
+                $data['user_details'] = $user_details;
+                return view('admin.userCRUD.display', $data);
+
+            }
+            elseif($user->user_type == 2)
+            {
+                // student
+            }
+            else
+            {
+                // admin
+                $data['user'] = $user;
+                return view('admin.userCRUD.display', $data);
+            }
+        }
+        else
+        {
+            flash("the requested user doesn't exist")->error();
+            return redirect('/admin/users');
+        }
     }
 
     /**
@@ -92,6 +123,34 @@ class UserController extends Controller
     public function edit($id)
     {
         //
+        $user = User::find($id);
+        if($user)
+        {
+            if($user->user_type == 1)
+            {
+                // teacher
+                $data['user'] = $user;
+                $user_details = Teacher_Detail::where('user_id', $id)->first();
+                $data['user_details'] = $user_details;
+                $data['expertize'] = json_decode($user_details->subjects_expertize_at);
+                return view('admin.userCRUD.update',$data);
+            }
+            elseif($user->user_type == 2)
+            {
+                // student
+            }
+            else
+            {
+                // admin
+                flash("updating info of this user is not possible")->error();
+                return redirect('/admin/dashboard');
+            }
+        }
+        else
+        {
+            flash("not such a user exists for update")->error();
+            return redirect('/admin/dashboard');
+        }
     }
 
     /**
@@ -101,9 +160,70 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(userUpdateValidation $userUpdateValidation, $id)
     {
         //
+        $user = User::find($id);
+        if($user)
+        {
+            if($user->user_type == 1)
+            {
+                // Teacher Update
+
+                // users
+                $user->name = $userUpdateValidation->teacher_name;
+                $user->updated_by = Auth::user()->id;
+                $user->updated_at = Carbon::now()->toDateTimeString();
+                $sendMail = false;
+                if($userUpdateValidation->email != $user->email)
+                {
+                    $user->is_first_time_login = true;
+                    $user->password = Hash::make("123");
+                    $sendMail = true;
+                }
+                $user->email = $userUpdateValidation->email;
+                
+
+                // teacher details
+                $user_details = Teacher_Detail::where('user_id',$id)->first();
+                if($user_details)
+                {
+                    $user_details->subjects_expertize_at = json_encode($userUpdateValidation->subjects);
+                    $user_details->contact_no = $userUpdateValidation->teacher_contact;
+                    $user_details->updated_by = Auth::user()->id;
+                    $user_details->updated_at = Carbon::now()->toDateTimeString();
+
+                    $user->save();
+                    $user_details->save();
+                    
+                    if ($sendMail == true) 
+                    {
+                        $this->sendMailtoUser($user->email);
+                    }
+                    flash("successfully updated")->success();
+                    return redirect('/admin/users');
+                }
+                else
+                {
+                    flash("no such user exists")->error();
+                    return redirect('/admin/users');
+                }
+            }
+            elseif($user->user_type == 2)
+            {
+                //student
+            }
+            else
+            {
+                flash("Not possible to update this user")->error();
+                return redirect('/admin/users');
+            }
+        }
+        else
+        {
+            flash("no such user exists")->error();
+            return redirect('/admin/users');
+        }
     }
 
     /**
@@ -115,6 +235,42 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+        $user = User::find($id);
+        if($user)
+        {
+            switch($user->user_type)
+            {
+                case 1:
+                    // Teacher
+                    $user_detail = Teacher_Detail::where('user_id',$id)->first();
+                    if($user_detail)
+                    {
+                        $user_detail->delete();
+                        $user->delete();
+                        flash('Deleted Successfully')->success();
+                        return redirect('/admin/users');
+                    }
+                    else
+                    {
+                        flash("no such user exists")->error();
+                        return redirect("/admin/users");
+                    }
+                    break;
+                case 2:
+                    // Student
+                    break;
+                default:
+                    flash("Deleting this user is not possible")->error();
+                    return redirect('/admin/users');
+                    break;
+            }
+        
+        }
+        else
+        {
+            flash("no such user exists")->error();
+            return redirect('/admin/users');
+        }
     }
 
     public function mailSending()

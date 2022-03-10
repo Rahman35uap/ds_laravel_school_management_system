@@ -6,6 +6,7 @@ use App\Http\Controllers\Student\StudentDashboardController;
 use App\Http\Controllers\Teacher\TeacherDashboardController;
 use App\Http\Middleware\Admin\OnlyAdmin;
 use App\Http\Middleware\Student\OnlyStudent;
+use App\Http\Middleware\Teacher\NotFirstTimeLogin;
 use App\Http\Middleware\Teacher\OnlyTeacher;
 use Illuminate\Support\Facades\Route;
 
@@ -32,11 +33,13 @@ Route::prefix('/admin')->middleware(['auth',OnlyAdmin::class])->group(function()
     Route::get('/dashboard',[AdminDashboardController::class,'index']);
     Route::resource('users', UserController::class);
 });
-Route::prefix('/teacher')->middleware(['auth',OnlyTeacher::class])->group(function(){
+Route::prefix('/teacher')->middleware(['auth',OnlyTeacher::class,NotFirstTimeLogin::class])->group(function(){
 
     Route::get('/dashboard',[TeacherDashboardController::class,'index']);
-    Route::get('/firstTimeLogin',[TeacherDashboardController::class,'firstTimeLogin']);
-    Route::post('/firstTimeLogin/passwordUpdate',[TeacherDashboardController::class,'passwordUpdate']);
+});
+Route::prefix('/teacher')->middleware(['auth', OnlyTeacher::class])->group(function () {
+    Route::get('/firstTimeLogin', [TeacherDashboardController::class, 'firstTimeLogin']);
+    Route::post('/firstTimeLogin/passwordUpdate', [TeacherDashboardController::class, 'passwordUpdate']);
 });
 Route::prefix('/student')->middleware(['auth',OnlyStudent::class])->group(function(){
 

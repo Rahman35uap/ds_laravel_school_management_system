@@ -38,11 +38,11 @@ class AuthenticatedSessionController extends Controller
         } else if (Auth::user()->user_type == 1) {
             if(Auth::user()->is_first_time_login == true)
             {
-                $var = '/teacher/firstTimeLogin';
+                $var = "/teacher/firstTimeLogin/";
             }
             else
             {
-                $var = '/teacher/dashboard';
+                $var = '/teacher/dashboard/';
             }
             
         }
