@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        //
+        // for admin only
         $user = new User();
         $user->name = "School_Admin";
         $user->user_type = 0;

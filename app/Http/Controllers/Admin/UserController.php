@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User_Create\userCreateValidation;
 use App\Http\Requests\User_Create\userTypeValidation;
 use App\Http\Requests\User_Create\userUpdateValidation;
-use App\Models\Teacher_Detail;
+use App\Models\Teacher_details;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -62,7 +62,8 @@ class UserController extends Controller
             'updated_by' => Auth::user()->id
             ]
         );
-        $teacher_detail = new Teacher_Detail();
+        
+        $teacher_detail = new Teacher_details();
         $teacher_detail->user_id = $current_user_id;
         $teacher_detail->subjects_expertize_at = $subjects;
         $teacher_detail->contact_no = $userCreateValidation->teacher_contact;
@@ -90,7 +91,7 @@ class UserController extends Controller
             {
                 //Teacher
                 $data['user'] = $user;
-                $user_details = Teacher_Detail::where('user_id',$id)->first();
+                $user_details = Teacher_details::where('user_id',$id)->first();
                 // dd($user_details);
                 $data['user_details'] = $user_details;
                 return view('admin.userCRUD.display', $data);
@@ -130,7 +131,7 @@ class UserController extends Controller
             {
                 // teacher
                 $data['user'] = $user;
-                $user_details = Teacher_Detail::where('user_id', $id)->first();
+                $user_details = Teacher_details::where('user_id', $id)->first();
                 $data['user_details'] = $user_details;
                 $data['expertize'] = json_decode($user_details->subjects_expertize_at);
                 return view('admin.userCRUD.update',$data);
@@ -185,7 +186,7 @@ class UserController extends Controller
                 
 
                 // teacher details
-                $user_details = Teacher_Detail::where('user_id',$id)->first();
+                $user_details = Teacher_details::where('user_id',$id)->first();
                 if($user_details)
                 {
                     $user_details->subjects_expertize_at = json_encode($userUpdateValidation->subjects);
@@ -242,7 +243,7 @@ class UserController extends Controller
             {
                 case 1:
                     // Teacher
-                    $user_detail = Teacher_Detail::where('user_id',$id)->first();
+                    $user_detail = Teacher_details::where('user_id',$id)->first();
                     if($user_detail)
                     {
                         $user_detail->delete();
