@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RelClassSubject extends Migration
+class CreateRelClassTimeTeachersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class RelClassSubject extends Migration
      */
     public function up()
     {
-        //
-        Schema::create('rel_class_subject', function (Blueprint $table) {
+        Schema::create('rel_class_time_teachers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('class_id')->constrained('class_sections'); // for class + section FK
-            $table->foreignId('teacher_id')->constrained('users'); // for teacher FK
+            $table->foreignId('class_time_id')->constrained('class_times');
+            $table->foreignId('teacher_id')->constrained('users');
+            $table->boolean('free');
             $table->timestamps();
         });
     }
@@ -29,7 +29,6 @@ class RelClassSubject extends Migration
      */
     public function down()
     {
-        //
-        Schema::dropIfExists('rel_class_subject');
+        Schema::dropIfExists('rel_class_time_teachers');
     }
 }

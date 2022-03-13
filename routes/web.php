@@ -1,7 +1,13 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\ClassController;
+use App\Http\Controllers\Admin\ClassWithSectionController;
+use App\Http\Controllers\Admin\dummy;
+use App\Http\Controllers\Admin\SecController;
+use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\SectionController;
 use App\Http\Controllers\Student\StudentDashboardController;
 use App\Http\Controllers\Teacher\TeacherDashboardController;
 use App\Http\Middleware\Admin\OnlyAdmin;
@@ -29,9 +35,11 @@ Route::get('/', function () {
 //     return view('dashboard');
 // })->middleware(['auth'])->name('dashboard');
 Route::prefix('/admin')->middleware(['auth',OnlyAdmin::class])->group(function(){
-
     Route::get('/dashboard',[AdminDashboardController::class,'index']);
     Route::resource('users', UserController::class);
+    Route::resource('subjects', SubjectController::class);
+    Route::resource('class', ClassController::class);
+    Route::resource('section', SecController::class);
 });
 Route::prefix('/teacher')->middleware(['auth',OnlyTeacher::class,NotFirstTimeLogin::class])->group(function(){
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ClassTimeSlot extends Migration
+class CreateClassTimesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,7 @@ class ClassTimeSlot extends Migration
      */
     public function up()
     {
-        //
-        Schema::create('class_time_slots', function (Blueprint $table) {
+        Schema::create('class_times', function (Blueprint $table) {
             $table->id();
             $table->string('Day');
             $table->string('start_end_time');
@@ -29,7 +28,6 @@ class ClassTimeSlot extends Migration
      */
     public function down()
     {
-        //
-        Schema::dropIfExists('class_time_slots');
+        Schema::dropIfExists('class_times');
     }
 }

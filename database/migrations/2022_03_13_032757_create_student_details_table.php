@@ -16,7 +16,8 @@ class CreateStudentDetailsTable extends Migration
         Schema::create('student_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('class_section_id')->constrained('class_sections');
+            $table->foreignId('class_id')->constrained('class_numbers');
+            $table->foreignId('section_id')->constrained('sections');
             $table->string("father_name");
             $table->string("mother_name");
             $table->string("parent_contact_no");

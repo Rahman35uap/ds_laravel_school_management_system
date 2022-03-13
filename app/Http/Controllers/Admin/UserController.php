@@ -134,7 +134,7 @@ class UserController extends Controller
                 $user_details = Teacher_details::where('user_id', $id)->first();
                 $data['user_details'] = $user_details;
                 $data['expertize'] = json_decode($user_details->subjects_expertize_at);
-                return view('admin.userCRUD.update',$data);
+            return view('admin.userCRUD.update',$data);
             }
             elseif($user->user_type == 2)
             {

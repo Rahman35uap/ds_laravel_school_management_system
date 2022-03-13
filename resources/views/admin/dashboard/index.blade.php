@@ -23,6 +23,15 @@
             </thead>
             <tbody>
                 <tr>
+                    <td><a href="{{ url("/admin/subjects") }}">Subjects</a></td>
+                </tr>
+                <tr>
+                    <td><a href="{{ url("/admin/class") }}">Class</a></td>
+                </tr>
+                <tr>
+                    <td><a href="{{ url("/admin/section") }}">Section</a></td>
+                </tr>
+                <tr>
                     <td><a href="{{ url("/admin/users") }}">User</a></td>
                 </tr>
                 <tr>

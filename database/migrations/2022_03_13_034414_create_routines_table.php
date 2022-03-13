@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RelClassTimeSlotTeacher extends Migration
+class CreateRoutinesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class RelClassTimeSlotTeacher extends Migration
      */
     public function up()
     {
-        //
-        Schema::create('rel_class_time_slots_', function (Blueprint $table) {
+        Schema::create('routines', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('slot_id')->constrained('class_time_slots');
+            $table->foreignId('section_id')->constrained('sections');
+            $table->foreignId('class_time_id')->constrained('class_times');
+            $table->foreignId('subject_id')->constrained('subjects');
             $table->foreignId('teacher_id')->constrained('users');
-            $table->boolean('free');
             $table->timestamps();
         });
     }
@@ -30,7 +30,6 @@ class RelClassTimeSlotTeacher extends Migration
      */
     public function down()
     {
-        //
-        Schema::dropIfExists('');
+        Schema::dropIfExists('routines');
     }
 }
