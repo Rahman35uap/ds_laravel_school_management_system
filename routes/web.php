@@ -37,6 +37,7 @@ Route::get('/', function () {
 Route::prefix('/admin')->middleware(['auth',OnlyAdmin::class])->group(function(){
     Route::get('/dashboard',[AdminDashboardController::class,'index']);
     Route::resource('users', UserController::class);
+    Route::get('/allSec/{id}',[UserController::class, 'allSec']);
     Route::resource('subjects', SubjectController::class);
     Route::resource('class', ClassController::class);
     Route::resource('section', SecController::class);

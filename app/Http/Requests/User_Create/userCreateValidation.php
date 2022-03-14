@@ -23,13 +23,30 @@ class userCreateValidation extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-            "teacher_name" => 'required',
-            "email" => 'required',
-            "subjects" => 'required',
-            "teacher_contact" => 'required'
-        ];
+        $user_type = app('request')->get('user_type');
+        if ($user_type == 1) {
+            // teacher
+            return [
+                //
+                "teacher_name" => 'required',
+                "email" => 'required',
+                "subjects" => 'required',
+                "teacher_contact" => 'required'
+            ];
+        } else {
+            //student
+            return [
+                //
+                "student_name" => 'required',
+                "email" => 'required',
+                "class" => 'required',
+                "section" => 'required',
+                "father_name" => 'required',
+                "mother_name" => 'required',
+                "parent_contact" => 'required'
+            ];
+        }
+        
     }
     public function messages()
     {

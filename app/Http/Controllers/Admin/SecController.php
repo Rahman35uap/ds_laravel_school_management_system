@@ -19,7 +19,7 @@ class SecController extends Controller
         //
         $data['class'] = Class_number::get();
         $data['section'] = Section::get();
-        $data['class_with_section'] = Class_number::join('sections','class_numbers.id','=','sections.class_id')->get(['class_numbers.class','sections.name']);
+        $data['class_with_section'] = Class_number::join('sections','class_numbers.id','=','sections.class_id')->get(['class_numbers.class','sections.name','sections.id']);
         return view('admin.secCRUD.index',$data);
     }
 
@@ -87,6 +87,19 @@ class SecController extends Controller
     public function edit($id)
     {
         //
+        $section = Section::find($id);
+        $class = Class_number::get();
+        if($section)
+        {
+            $data['section'] = $section;
+            $data['class'] = $class;
+            return view('admin.secCRUD.update',$data);
+        }
+        else
+        {
+            flash("No such section exists")->error();
+            return redirect('/admin/section');
+        }
     }
 
     /**
@@ -99,6 +112,49 @@ class SecController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $this->validate($request, [
+            'class_number' => 'required',
+            'section' => 'required'
+        ]);
+        $section = Section::find($id);
+        if($section)
+        {
+            $section = Section::where('name',$request->section)->where('class_id',$request->class_number)->first();
+            if(!$section)
+            {
+                // if the given section with given class doesn't exist then will update the class
+                $section = Section::find($id);
+                $section->name = $request->section;
+                $section->class_id = $request->class_number;
+                $section->save();
+
+                flash("Updated Successfully")->success();
+                return redirect('/admin/section');
+            }
+            $section = Section::where('name', $request->section)->where('class_id', $request->class_number)->find($id);
+            if($section)
+            {
+                // if the given section with given class exists and that's id is equal to the requested id then will update the section otherwise not
+
+                $section->name = $request->section;
+                $section->class_id = $request->class_number;
+                $section->save();
+
+                flash("Updated Successfully")->success();
+                return redirect('/admin/section');
+
+            }
+            else
+            {
+                flash("you can't give two different section same name. Your given section name with given class already exists .")->error();
+                return redirect('/admin/section');
+            }
+        }
+        else
+        {
+            flash("No such section exists")->error();
+            return redirect('/admin/section');
+        }
     }
 
     /**

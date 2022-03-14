@@ -186,7 +186,7 @@ class ClassController extends Controller
                 flash("Updated Successfully")->success();
                 return redirect('/admin/class');
             } else {
-                flash("you can't give two different class with same name. Your given class name already exists .")->error();
+                flash("you can't give two different class same name. Your given class name already exists .")->error();
                 return redirect('/admin/class');
             }
         } else {
