@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Rel_class_subjects;
+use App\Models\Rel_subjects_teacher;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 
@@ -125,6 +127,21 @@ class SubjectController extends Controller
         $subject = Subject::find($id);
         if($subject)
         {
+            // delete subjects from rel_class_subject
+            $rel_class_subjects = Rel_class_subjects::where('subject_id',$id)->get();
+            foreach($rel_class_subjects as $sub)
+            {
+                $sub->delete();
+            }
+
+            // delete subjects from rel_subject_teacher
+            $rel_subjects_teacher = Rel_subjects_teacher::where('subject_id',$id)->get();
+            foreach($rel_subjects_teacher as $sub)
+            {
+                $sub->delete();
+            }
+
+
             $subject->delete();
             flash("deleted successfully")->success();
             return redirect('admin/subjects');

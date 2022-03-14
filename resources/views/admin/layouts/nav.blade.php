@@ -22,16 +22,40 @@
         </li> --}}
 
         <li class="nav-item">
-            <a href="{{ url('/admin/categories') }}"
-                class="nav-link {{ request()->is('*/categories*') ? 'active' : '' }}">
+            <a href="{{ url('/admin/subjects') }}"
+                class="nav-link {{ request()->is('*/subjects*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-desktop"></i>
-                <p>Category</p>
+                <p>Subjects</p>
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ url('/admin/products') }}" class="nav-link {{ request()->is('*/product*') ? 'active' : '' }}">
+            <a href="{{ url('/admin/class') }}" class="nav-link {{ request()->is('*/class*') ? 'active' : '' }}">
                 <i class="nav-icon fas fa-desktop"></i>
-                <p>Product</p>
+                <p>Class</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ url('/admin/section') }}" class="nav-link {{ request()->is('*/section*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-desktop"></i>
+                <p>Section</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ url('/admin/users') }}" class="nav-link {{ request()->is('*/users*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-desktop"></i>
+                <p>Users</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ url('/admin/routine') }}" class="nav-link {{ request()->is('*/routine*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-desktop"></i>
+                <p>Routine</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ url('/admin/exam') }}" class="nav-link {{ request()->is('*/exam*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-desktop"></i>
+                <p>Exam</p>
             </a>
         </li>
 

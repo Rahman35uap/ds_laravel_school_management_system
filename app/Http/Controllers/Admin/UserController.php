@@ -188,6 +188,20 @@ class UserController extends Controller
                 return view('admin.userCRUD.display', $data);
             } elseif ($user->user_type == UserType::Student) {
                 // student
+                $user = User::find($id);
+                if($user)
+                {
+                    $data['user'] = $user;
+                    $data['student_details'] = Student_details::where('user_id',$id)->first();
+                    $data['class_details'] = Class_number::where('id',$data['student_details']->class_id)->first();
+                    $data['section_details'] = Section::where('id',$data['student_details']->section_id)->first();
+                    return view('admin.userCRUD.display', $data);
+                }
+                else
+                {
+                    flash("the requested user doesn't exist")->error();
+                    return redirect('/admin/users');        
+                }
             } else {
                 // admin
                 $data['user'] = $user;
@@ -225,6 +239,12 @@ class UserController extends Controller
                 return view('admin.userCRUD.update', $data);
             } elseif ($user->user_type == UserType::Student) {
                 // student
+                $data['user'] = $user;
+                $user_details = Student_details::where('user_id', $id)->first();
+                $data['user_details'] = $user_details;
+                $data['class'] = Class_number::get();
+                $data['section'] = Section::where('class_id',$user_details->class_id)->get();
+                return view('admin.userCRUD.update', $data);
             } else {
                 // admin
                 flash("updating info of this user is not possible")->error();
@@ -294,9 +314,56 @@ class UserController extends Controller
                     flash("no such user exists")->error();
                     return redirect('/admin/users');
                 }
-            } elseif ($user->user_type == UserType::Student) {
+            } 
+            elseif ($user->user_type == UserType::Student) 
+            {
                 //student
-            } else {
+
+                
+                $class_exist = Class_number::where('id',$userUpdateValidation->class)->first();
+                $section_exist = Section::where('id',$userUpdateValidation->section)->where('class_id',$userUpdateValidation->class)->first();
+                if($class_exist && $section_exist)
+                {
+                    // users
+                    $user->name = $userUpdateValidation->student_name;
+                    $user->updated_by = Auth::user()->id;
+                    $user->updated_at = Carbon::now()->toDateTimeString();
+                    $sendMail = false;
+                    if ($userUpdateValidation->email != $user->email) {
+                        $user->is_first_time_login = true;
+                        $user->password = Hash::make("123");
+                        $sendMail = true;
+                    }
+                    $user->email = $userUpdateValidation->email;
+                    $user->save();
+    
+                    // student details
+                    $user_details = Student_details::where('user_id', $id)->first();
+                    $user_details->updated_by = Auth::user()->id;
+                    $user_details->updated_at = Carbon::now()->toDateTimeString();
+                    $user_details->user_id = $id;
+                    $user_details->class_id = $userUpdateValidation->class;
+                    $user_details->section_id = $userUpdateValidation->section;
+                    $user_details->father_name = $userUpdateValidation->father_name;
+                    $user_details->mother_name = $userUpdateValidation->mother_name;
+                    $user_details->parent_contact_no = $userUpdateValidation->parent_contact;
+                    $user_details->save();
+    
+                    // sending mail to student for new mail address
+                    if ($sendMail == true) {
+                        $this->sendMailtoUser($user->email);
+                    }
+                    flash("successfully updated")->success();
+                    return redirect('/admin/users');
+                }
+                else
+                {
+                    flash("Your given section and class doesn't exist.Couldn't update.")->error();
+                    return redirect('/admin/users');
+                }
+
+            } 
+            else {
                 flash("Not possible to update this user")->error();
                 return redirect('/admin/users');
             }
@@ -334,6 +401,19 @@ class UserController extends Controller
                     break;
                 case UserType::Student:
                     // Student
+                    $user_detail = Student_details::where('user_id',$id)->first();
+                    if($user_detail)
+                    {
+                        $user_detail->delete();
+                        $user->delete();
+                        flash('Deleted Successfully')->success();
+                        return redirect('/admin/users');
+                    }
+                    else
+                    {
+                        flash("no such user exists")->error();
+                        return redirect("/admin/users");
+                    }
                     break;
                 default:
                     flash("Deleting this user is not possible")->error();

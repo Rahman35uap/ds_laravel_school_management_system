@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Class_number;
 use App\Models\Rel_class_subjects;
+use App\Models\Section;
+use App\Models\Student_details;
 use App\Models\Subject;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -206,7 +209,23 @@ class ClassController extends Controller
         //
         $class = Class_number::find($id);
         if ($class) {
-            // delete the all subjects of this class from relation table
+            
+            // delete all students of this class
+            $student_details = Student_details::where('class_id',$id)->get();
+            // dd($student_details);
+            foreach($student_details as $student)
+            {
+                // dd($student);
+                $studentId = $student->user_id;
+                $student->delete();
+                $user = User::find($studentId);
+                $user->delete();
+            }
+            
+            // delete all sections of this class
+            Section::where('class_id',$id)->delete();
+            
+            // delete the all related subjects of this class from relation table
             Rel_class_subjects::where('class_id',$id)->delete();
 
             // delete the class

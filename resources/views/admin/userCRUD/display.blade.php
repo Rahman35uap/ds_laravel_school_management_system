@@ -34,7 +34,32 @@
         </table>
 
         @elseif($user->user_type == 2)
-        <h3>Create a new Student</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Student ID</th>
+                        <th>User Type</th>
+                        <th>Class Name</th>
+                        <th>Section Name</th>
+                        <th>Father Name</th>
+                        <th>Mother Name</th>
+                        <th>Parent Contact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->id }}</td>
+                        <td>{{ App\Enums\UserType::getDescription($user->user_type) }}</td>
+                        <td>{{ $class_details->class }}</td>
+                        <td>{{ $section_details->name }}</td>
+                        <td>{{ $student_details->father_name }}</td>
+                        <td>{{ $student_details->mother_name }}</td>
+                        <td>{{ $student_details->parent_contact_no }}</td>
+                    </tr>
+                </tbody>
+            </table>
         @else
         <table class="table table-bordered">
             <thead>

@@ -26,7 +26,7 @@
                         <a href="{{ url("/admin/class/{$eachClass->id}") }}" class="btn btn-success btn-sm">Show</a>
                         <a href="{{ url("/admin/class/{$eachClass->id}/edit") }}" class="btn btn-warning btn-sm">Update</a>
                         <form action="{{ url("/admin/class/$eachClass->id") }}" method="POST"
-                            onsubmit="return confirm('Do you want to delete this Class?');">
+                            onsubmit="return confirm('All sections of this class and all students of this class will be deleted.Do you want to delete this Class.?');">
                             @csrf
                             @method('delete')
                             <input type="submit" value="Delete" class="btn btn-danger btn-sm">

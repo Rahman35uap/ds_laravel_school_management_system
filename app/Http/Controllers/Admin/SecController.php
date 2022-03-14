@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Class_number;
 use App\Models\Section;
+use App\Models\Student_details;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class SecController extends Controller
@@ -166,5 +168,29 @@ class SecController extends Controller
     public function destroy($id)
     {
         //
+        $section = Section::find($id);
+        if($section)
+        {
+             // delete all students of this section
+             $student_details = Student_details::where('section_id',$id)->get();
+             // dd($student_details);
+             foreach($student_details as $student)
+             {
+                 // dd($student);
+                 $studentId = $student->user_id;
+                 $student->delete();
+                 $user = User::find($studentId);
+                 $user->delete();
+             }
+
+             $section->delete();
+             flash("Deleted Section Successfully")->success();
+             return redirect('/admin/section');
+        }
+        else
+        {
+            flash("No such a section exists.")->error();
+            return redirect('/admin/section');
+        }
     }
 }
