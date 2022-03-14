@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware\Teacher;
 
+use App\Enums\UserType;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class OnlyTeacher
      */
     public function handle(Request $request, Closure $next)
     {
-        if(Auth::user()->user_type == 1)
+        if(Auth::user()->user_type == UserType::Teacher)
         {
             return $next($request);
         }

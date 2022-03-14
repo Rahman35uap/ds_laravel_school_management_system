@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware\Student;
 
+use App\Enums\UserType;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OnlyStudent
 {
@@ -16,6 +18,13 @@ class OnlyStudent
      */
     public function handle(Request $request, Closure $next)
     {
-        return $next($request);
+        if(Auth::user()->user_type == UserType::Student)
+        {
+            return $next($request);
+        }
+        else
+        {
+            return redirect('/');
+        }
     }
 }

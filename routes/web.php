@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('site.index');
 });
 
 // Route::get('/dashboard', function () {
@@ -54,9 +54,13 @@ Route::prefix('/teacher')->middleware(['auth', OnlyTeacher::class])->group(funct
     Route::get('/firstTimeLogin', [TeacherDashboardController::class, 'firstTimeLogin']);
     Route::post('/firstTimeLogin/passwordUpdate', [TeacherDashboardController::class, 'passwordUpdate']);
 });
-Route::prefix('/student')->middleware(['auth',OnlyStudent::class])->group(function(){
+Route::prefix('/student')->middleware(['auth',OnlyStudent::class,NotFirstTimeLogin::class])->group(function(){
 
     Route::get('/dashboard',[StudentDashboardController::class,'index']);
+});
+Route::prefix('/student')->middleware(['auth', OnlyStudent::class])->group(function () {
+    Route::get('/firstTimeLogin', [StudentDashboardController::class, 'firstTimeLogin']);
+    Route::post('/firstTimeLogin/passwordUpdate', [StudentDashboardController::class, 'passwordUpdate']);
 });
 
 Route::get('/mail',[UserController::class,'mailSending']);

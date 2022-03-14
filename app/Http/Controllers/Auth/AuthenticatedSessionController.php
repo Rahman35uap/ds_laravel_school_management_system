@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\UserType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
@@ -35,7 +36,9 @@ class AuthenticatedSessionController extends Controller
         $var = '/student/dashboard';
         if (Auth::user()->user_type == 0) {
             $var = '/admin/dashboard';
-        } else if (Auth::user()->user_type == 1) {
+        } 
+        elseif (Auth::user()->user_type == UserType::Teacher) 
+        {
             if(Auth::user()->is_first_time_login == true)
             {
                 $var = "/teacher/firstTimeLogin/";
@@ -46,6 +49,18 @@ class AuthenticatedSessionController extends Controller
             }
             
         }
+        elseif(Auth::user()->user_type == UserType::Student)
+        {
+            if(Auth::user()->is_first_time_login == true)
+            {
+                $var = "/student/firstTimeLogin/";
+            }
+            else
+            {
+                $var = '/student/dashboard/';
+            }
+        }
+        
 
         return redirect()->intended($var);
     }
